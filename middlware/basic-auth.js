@@ -4,7 +4,7 @@ function requireBasicAuth(req, res, next) {
   const authValue = req.get('Authorization') || '';
 
   if (!authValue.toLowerCase().startsWith('basic ')) {
-    return res.status(401).json({ error: "Missing basic auth" })
+    return res.status(401).json({ error: 'Missing basic auth' });
   }
 
   const token = authValue.split(' ')[1];
@@ -20,16 +20,16 @@ function requireBasicAuth(req, res, next) {
     .first()
     .then(user => {
       if (!user) {
-        return res.status(401).json({ error: "Invalid credentials" })
+        return res.status(401).json({ error: 'Invalid credentials' });
       }
-      return bcrypt.compare(tokenPassword, user.tokenPassword)
+      return bcrypt.compare(tokenPassword, user.password)
         .then(passwordMatch => {
           if (!passwordMatch) {
-            return res.status(401).json({ error: "Unauthorized request" })
+            return res.status(401).json({ error: 'Unauthorized request' });
           }
-          req.user = user
-          next()
-        })
+          req.user = user;
+          next();
+        });
     })
     .catch(next);
 }
